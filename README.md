@@ -6,14 +6,8 @@
 # Iniciar
 - ``` npx tsc --init ``` -> ``` "outDir: "./build" ```
 
-``` 
-    npm i 
-```
+- ``` npm i ```
 
-```
-    npm run dev
-``` 
+- ``` npm run dev ``` 
 
-```
-    npm install venom-bot
-```
+-``` npm install venom-bot ```

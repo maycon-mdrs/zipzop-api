@@ -10,40 +10,40 @@ create({
 })
 
 async function start(client: Whatsapp) {
-client.onMessage(async (message: Message) => {
-    if (!message.body || message.isGroupMsg) return
+    client.onMessage(async (message: Message) => {
+        if (!message.body || message.isGroupMsg) return
 
-    const response = `Olá italo!`
-
-    await client.sendText(message.from, response)
-    
-    const title = "Button push test"
-    const subtitle = "Choose your favorite"
-    let buttons = [
-        {
-        "buttonId": "1",
-        "text": "Teste",
-        "buttonText": {
-        "displayText": "Button 1"
+        const response = `Olá italo!`
+        const messagem = message.body.toLowerCase()
+        
+        if (messagem === 'oi' || message.body === 'olá' || message.body === 'ola') {
+            await client.sendText(message.from, response)
+            await sendMainMenu(client, message.from);
+        } else {
+            await handleUserResponse(client, message);
         }
-        },
-        {
-        "buttonId": "2",
-        "text": "Teste2",
-        "buttonText": {
-        "displayText": "Button 2"
-        }
-        }
-        ]
-
-      await client.sendButtons(message.from, title, subtitle, buttons)
-      .then((result) => {
-        console.log("Result", result)
-      })
-      .catch((error) => {
-        console.error("Error when sending: ", error)
-      })
-
-})
+    })
 }
 
+async function sendMainMenu(client: any, recipient: string) {
+    const menu = 'Escolha uma opção:\n' +
+      '[1] Preciso de ajuda com um problema técnico.\n' +
+      '[2] Gostaria de saber mais sobre os produtos.';
+    
+    await client.sendText(recipient, menu);
+}
+
+async function handleUserResponse(client: any, message: Message) {
+    const userResponse = message.body.toLowerCase();
+    
+    if (userResponse === '1') {
+      await client.sendText(message.from, 'Claro, estou aqui para ajudar! Por favor, descreva o problema que você está enfrentando.');
+      // Implemente a lógica para lidar com problemas técnicos aqui
+    } else if (userResponse === '2') {
+      await client.sendText(message.from, 'Ótimo! Temos uma variedade de produtos incríveis. Você está procurando informações sobre um produto específico?');
+      // Implemente a lógica para fornecer informações sobre produtos aqui
+    } else {
+      await client.sendText(message.from, 'Desculpe, não entendi a sua resposta. Por favor, escolha uma opção válida.');
+      await sendMainMenu(client, message.from);
+    }
+}
