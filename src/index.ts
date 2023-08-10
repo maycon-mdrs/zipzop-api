@@ -1,7 +1,23 @@
 import { Message, Whatsapp, create } from "venom-bot"
+import { openai } from "./lib/openai"
+import { ChatCompletionRequestMessage } from "openai"
+
+async function completion( messages: ChatCompletionRequestMessage[] ):Promise<string | undefined> {
+  const completion = await openai.createChatCompletion({
+      model: "gpt-3.5-turbo",
+      temperature: 0.9,
+      max_tokens: 256,
+      messages,
+    }
+  )
+
+  return completion.data.choices[0].message?.content
+}
+
+const customerChat: ChatCompletionRequestMessage[] = []
 
 create({
-    session: "zipzop-api",
+    session: "Maycon",
     disableWelcome: true,
 })
 .then(async (client: Whatsapp) => await start(client))
@@ -13,37 +29,24 @@ async function start(client: Whatsapp) {
     client.onMessage(async (message: Message) => {
         if (!message.body || message.isGroupMsg) return
 
-        const response = `Olá italo!`
-        const messagem = message.body.toLowerCase()
-        
-        if (messagem === 'oi' || message.body === 'olá' || message.body === 'ola') {
-            await client.sendText(message.from, response)
-            await sendMainMenu(client, message.from);
-        } else {
-            await handleUserResponse(client, message);
-        }
+        console.log('message.body: ', message.body)
+
+        customerChat.push({
+          role: 'user',
+          content: message.body,
+        })
+
+        console.log('customerChat: ', customerChat)
+
+        const response = (await completion(customerChat)) || "Não entendi, pode repetir?!"
+
+        console.log('response: ', response)
+
+        customerChat.push({
+          role: 'assistant',
+          content: response,
+        })
+
+        await client.sendText(message.from, response)
     })
-}
-
-async function sendMainMenu(client: any, recipient: string) {
-    const menu = 'Escolha uma opção:\n' +
-      '[1] Preciso de ajuda com um problema técnico.\n' +
-      '[2] Gostaria de saber mais sobre os produtos.';
-    
-    await client.sendText(recipient, menu);
-}
-
-async function handleUserResponse(client: any, message: Message) {
-    const userResponse = message.body.toLowerCase();
-    
-    if (userResponse === '1') {
-      await client.sendText(message.from, 'Claro, estou aqui para ajudar! Por favor, descreva o problema que você está enfrentando.');
-      // Implemente a lógica para lidar com problemas técnicos aqui
-    } else if (userResponse === '2') {
-      await client.sendText(message.from, 'Ótimo! Temos uma variedade de produtos incríveis. Você está procurando informações sobre um produto específico?');
-      // Implemente a lógica para fornecer informações sobre produtos aqui
-    } else {
-      await client.sendText(message.from, 'Desculpe, não entendi a sua resposta. Por favor, escolha uma opção válida.');
-      await sendMainMenu(client, message.from);
-    }
 }
