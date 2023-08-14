@@ -29,8 +29,7 @@ const moreInfo =
 
 *- Endereço:* Avenida Estrela do Mar, 2183 - Ponta Negra Natal - RN CEP: 59090-400
 
-*- Horário de funcionamento:* 17h30 às 22h30
-`
+*- Horário de funcionamento:* 18h às 22h30`
 
 const outIA = `_Digite *#* para encerrar o atendimento com o assistente virtual!_`
 
