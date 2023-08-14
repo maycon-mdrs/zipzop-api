@@ -16,7 +16,7 @@ const closeMessage =
 Acesse: dogspeto.site`
 
 const defaultMessage = 
-`Caso dejese uma outra opção, digite uma das opções abaixo::
+`Caso dejese uma outra opção, digite uma das opções abaixo:
 
 *1.* Visualizar cardápio
 *2.* Fazer pedido
