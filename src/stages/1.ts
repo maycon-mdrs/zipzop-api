@@ -20,7 +20,7 @@ export async function firstStage(user:string, message:string, client: Whatsapp):
         banco[user].stage = 3
         return "opcao 2"
     }
-    /* FALAR COM ATETND */
+    /* FALAR COM ATENDENTE */
     else if (message === "3") {
         banco[user].stage = 4
         return "opcao 3"
@@ -30,6 +30,7 @@ export async function firstStage(user:string, message:string, client: Whatsapp):
         await client.sendLocation(user, "-5.879444090962025", "-35.17789638278107", "Localização do DOGSPETO")
         return defaultMessage
     }
+    /* MAIS INFORMAÇÕES */
     else if (message === "5") {
         return moreInfo
     }
