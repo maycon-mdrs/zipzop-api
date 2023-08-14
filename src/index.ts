@@ -1,22 +1,9 @@
 import { Message, Whatsapp, create } from "venom-bot"
-import { openai } from "./lib/openai"
+import { completion } from "./IA" 
 import { ChatCompletionRequestMessage } from "openai"
 import { stages } from "./stages"
 import { banco } from "./banco"
-
-async function completion(messages: ChatCompletionRequestMessage[]): Promise<string | undefined> {
-    const completion = await openai.createChatCompletion({
-        model: "gpt-3.5-turbo",
-        temperature: 0.9,
-        max_tokens: 256,
-        messages,
-    }
-    )
-
-    return completion.data.choices[0].message?.content
-}
-
-const customerChat: ChatCompletionRequestMessage[] = []
+import { outIA } from "./prompt/prompt"
 
 create({
     session: "ItaloBot",
@@ -36,25 +23,17 @@ async function start(client: Whatsapp) {
 
         console.log('message.body: ', message.body)
 
-        await client.sendText(message.from, response)
-
-        customerChat.push({
-            role: 'user',
-            content: message.body,
-        })
-
-        console.log('customerChat: ', customerChat)
-
-        //const responseIA = (await completion(customerChat)) || "Não entendi, pode repetir?!"
+        if(response === "IA__ACTIVE") {
+            let response = (await stages[getStage(message.from)].stage(message.from, "oi", client)) || ""
+            await client.sendText(message.from, outIA)
+            await client.sendText(message.from, response)
+        }
+        else {
+            await client.sendText(message.from, response)
+        }
 
         console.log('response: ', response)
 
-        customerChat.push({
-            role: 'assistant',
-            //content: responseIA,
-        })
-
-        //await client.sendText(message.from, response)
     })
 }
 

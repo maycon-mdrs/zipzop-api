@@ -22,8 +22,8 @@ export async function firstStage(user:string, message:string, client: Whatsapp):
     }
     /* FALAR COM ATENDENTE */
     else if (message === "3") {
-        banco[user].stage = 4
-        return "opcao 3"
+        banco[user].stage = 3
+        return "IA__ACTIVE"
     }
     /* LOCALIZAÇÃO */
     else if (message === "4") {

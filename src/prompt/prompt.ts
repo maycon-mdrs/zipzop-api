@@ -32,7 +32,9 @@ const moreInfo =
 *- Horário de funcionamento:* 17h30 às 22h30
 `
 
-export { apresentation, closeMessage, defaultMessage, moreInfo }
+const outIA = `_Digite *#* para encerrar o atendimento com o assistente virtual!_`
+
+export { apresentation, closeMessage, defaultMessage, moreInfo, outIA }
 
 /* 
 const apresentation = 
