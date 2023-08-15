@@ -4,7 +4,7 @@ import { ChatCompletionRequestMessage } from "openai"
 export async function completion(messages: ChatCompletionRequestMessage[]): Promise<string | undefined> {
     const completion = await openai.createChatCompletion({
         model: "gpt-3.5-turbo",
-        temperature: 0.9,
+        temperature: 0,
         max_tokens: 256,
         messages,
     }

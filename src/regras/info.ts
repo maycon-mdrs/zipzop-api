@@ -13,7 +13,7 @@ function getHours() {
     if( (open >= timerOpen && close <= timerClose) && [0,2,3,4,5,6].includes(day) ) {
         return true
     } else {
-        return false
+        return true
     }
 }
 

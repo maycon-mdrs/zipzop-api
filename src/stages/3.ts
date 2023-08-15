@@ -3,8 +3,14 @@ import { banco } from "../banco"
 import { defaultMessage } from "../prompt/prompt"
 import { completion } from "../IA"
 import { ChatCompletionRequestMessage } from "openai"
+import { promptIA } from "../prompt/promptIA"
 
-const customerChat: ChatCompletionRequestMessage[] = []
+const customerChat: ChatCompletionRequestMessage[] = [
+    {
+        role: "system",
+        content: promptIA
+    }
+]
 
 export async function thirdStage(user:string, message:string, client: Whatsapp) {
     if(message !== "#") {
