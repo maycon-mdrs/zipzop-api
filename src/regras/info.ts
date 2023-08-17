@@ -27,19 +27,25 @@ function getHours() {
 
 const timers: TimerMap = {};
 const TIMER_5 = 5 * 60 * 1000 // 5 minutos -> milissegundos
-const TIMER_1 = 1 * 60 * 1000 // 1 minuto -> milissegundos
+const TIMER_4 = 1 * 60 * 1000 // 1 minuto -> milissegundos
 
 function startTimer(user: string, client: Whatsapp): void {
     // Cancelar temporizador existente, se houver
     clearTimeout(timers[user])
 
+    const startTimer = Date.now()
+    console.log('Temporizador iniciado em: ', startTimer)
+
     // Iniciar um novo temporizador
     timers[user] = setTimeout(() => {
-        const remainingTime = (timers[user].unref() as any)._idleTimeout
+        const remainingTime = Date.now() - startTimer
+        console.log('Tempo restante: ', remainingTime)
 
-        if (remainingTime < TIMER_1) {
-            client.sendText(user, "Falta 1 minuto para finalizar. Por favor, responda para continuar.")
-        } else {
+        if (remainingTime >= TIMER_4) {
+            client.sendText(user, "_Encerraremos nossa conversa em 1 minuto. Por favor, responda para continuar!_")
+            console.log('Tempo restante: 1 minuto.')
+        } 
+        else if (remainingTime >= TIMER_5) {
             // Caso contrário, redefinir o estágio para 0 após 5 minutos
             banco[user].stage = 0;
             client.sendText(user, timerOut)

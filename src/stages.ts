@@ -1,4 +1,6 @@
 import { Message, Whatsapp, create } from "venom-bot"
+import { banco } from "./banco";
+
 import { welcome } from "./stages/0";
 import { firstStage } from "./stages/1";
 import { secondStage } from "./stages/2";
@@ -37,3 +39,16 @@ export const stages: { [key: number]: Stage } = {
         stage: defaultStage,
     }
 };
+
+export function getStage(user: string): number {
+    if (banco[user]) {
+        //Se existir esse numero no banco de dados
+        return banco[user].stage;
+    } else {
+        //Se for a primeira vez que entra e contato
+        banco[user] = {
+            stage: 0,
+        };
+        return banco[user].stage;
+    }
+}

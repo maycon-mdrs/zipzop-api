@@ -1,8 +1,8 @@
 import { Message, Whatsapp, create } from "venom-bot"
-import { stages } from "./stages"
-import { banco } from "./banco"
-import { outIA } from "./prompt/prompt"
+import { stages, getStage } from "./stages"
 import { cancelTimer, startTimer } from "./regras/info"
+
+import { outIA } from "./prompt/prompt"
 
 create({
     session: "ItaloBot",
@@ -26,8 +26,8 @@ async function start(client: Whatsapp) {
         // Transferir primeiramente para Stages
         let response = (await stages[getStage(message.from)].stage(message.from, message.body, client)) || ""
 
-        console.log('message.body: ', message.body)
-
+        console.log(message.from, ': ', message.body)
+        
         if(response === "IA__ACTIVE") {
             let response = (await stages[getStage(message.from)].stage(message.from, "oi", client)) || ""
             await client.sendText(message.from, outIA)
@@ -42,15 +42,3 @@ async function start(client: Whatsapp) {
     })
 }
 
-function getStage(user: string): number {
-    if (banco[user]) {
-        //Se existir esse numero no banco de dados
-        return banco[user].stage;
-    } else {
-        //Se for a primeira vez que entra e contato
-        banco[user] = {
-            stage: 0,
-        };
-        return banco[user].stage;
-    }
-}
