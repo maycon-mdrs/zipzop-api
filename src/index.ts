@@ -1,9 +1,8 @@
 import { Message, Whatsapp, create } from "venom-bot"
-import { completion } from "./IA" 
-import { ChatCompletionRequestMessage } from "openai"
 import { stages } from "./stages"
 import { banco } from "./banco"
 import { outIA } from "./prompt/prompt"
+import { cancelTimer, startTimer } from "./regras/info"
 
 create({
     session: "ItaloBot",
@@ -17,6 +16,12 @@ create({
 async function start(client: Whatsapp) {
     client.onMessage(async (message: Message) => {
         if (!message.body || message.isGroupMsg) return
+
+        // Cancelar temporizador existente, se houver
+        cancelTimer(message.from);
+
+        // Iniciar um novo temporizador
+        startTimer(message.from, client);
 
         // Transferir primeiramente para Stages
         let response = (await stages[getStage(message.from)].stage(message.from, message.body, client)) || ""

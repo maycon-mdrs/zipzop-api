@@ -33,7 +33,9 @@ const moreInfo =
 
 const outIA = `_Digite *#* para encerrar o atendimento com o assistente virtual!_`
 
-export { apresentation, closeMessage, defaultMessage, moreInfo, outIA }
+const timerOut = `O nosso atendimento será encerrado devido a falta de comunicação. O DOGSPETO agradece e volte sempre!` 
+
+export { apresentation, closeMessage, defaultMessage, moreInfo, outIA, timerOut }
 
 /* 
 const apresentation = 
